@@ -1,0 +1,93 @@
+<html>
+	<head>
+		<title>COVID-19 Game Of Life</title>
+		<script src="cgol.js"></script>
+		<script>
+			var timer = null;
+			var mode = Modes.ORIGINAL;
+
+			function startNewBoard() {
+				if(timer) clearTimeout(timer);
+				timer = null;
+
+				var width = parseInt(document.getElementById('width').value);
+				var height = parseInt(document.getElementById('height').value);
+				if(isNaN(width) || isNaN(height) || width <= 0 || height <= 0 || width > 1000 || height > 1000) {
+					alert('Invalid dimension');
+					return;
+				}
+				createNewBoard(width, height, 'board', 'board');
+			}
+
+			function startSpaceshipBoard() {
+				startNewBoard();
+				if(width < 3 || height < 3) return;
+				[[1,0],[2,1],[0,2],[1,2],[2,2]].map(x=>switchState(...x));
+			}
+
+			function startCanonBoard() {
+				startNewBoard();
+				if(width < 36 || height < 9) return;
+				[
+					[0,4],[0,5],[1,4],[1,5],
+					[34,2],[34,3],[35,2],[35,3],
+					[10,4],[10,5],[10,6],
+					[11,3],[11,7],
+					[12,2],[13,2],[12,8],[13,8],
+					[14,5],
+					[15,3],[15,7],
+					[16,4],[16,5],[16,6],
+					[17,5],
+					[20,2],[21,2],[20,3],[21,3],[20,4],[21,4],
+					[22,1],[22,5],
+					[24,0],[24,1],[24,5],[24,6]
+				].map(x=>switchState(...x));
+			}
+
+			function live() {
+				if(timer == null) return autoNext();
+				clearTimeout(timer);
+				timer = null;
+			}
+			function autoNext() {
+				moveNext();
+				timer = setTimeout('autoNext()',0);
+			}
+		</script>
+	</head>
+	<body>
+		<table>
+			<tr>
+				<td style="width: 60px">Width: </td>
+				<td style="width: 45px">
+					<input style="width: 100%; text-align: right; " type="text" id="width" value="100"/>
+				</td>
+				<td style="width: 60px">&nbsp;</td>
+				<td style="width: 60px">Height: </td>
+				<td style="width: 45px">
+					<input style="width: 100%; text-align: right; " type="text" id="height" value="100"/>
+				</td>
+				<td style="width: 60px">&nbsp;</td>
+				<td style="width: 150px"><a href="#" onclick="startNewBoard()">Create empty board</a></td>
+				<td style="width: 60px">&nbsp;</td>
+				<td style="width: 150px"><a href="#" onclick="startSpaceshipBoard()">Create spaceship</a></td>
+				<td style="width: 60px">&nbsp;</td>
+				<td style="width: 150px"><a href="#" onclick="startCanonBoard()">Create canon</a></td>
+			</tr>
+		</table>
+		<br/>
+		<hr/>
+		<table>
+			<tr>
+				<td style="width: 150px"><a href="#" onclick="moveNext()">Move next</a></td>
+				<td style="width: 60px">&nbsp;</td>
+				<td style="width: 250px"><a href="#" onclick="live()">Live your own (start/stop)</a></td>
+			</tr>
+		</table>
+		<br/>
+		<hr/>
+		<div id="board">
+
+		</div>
+	</body>
+</html>

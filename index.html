@@ -1,0 +1,91 @@
+<html>
+	<head>
+		<title>COVID-19 Game Of Life</title>
+		<script src="cgol.js"></script>
+	</head>
+	<script>
+			var timer = null;
+			var mode = Modes.COVID;
+
+			function startNewBoard() {
+				if(timer) clearTimeout(timer);
+				timer = null;
+
+				var width = parseInt(document.getElementById('width').value);
+				var height = parseInt(document.getElementById('height').value);
+				if(isNaN(width) || isNaN(height) || width <= 0 || height <= 0 || width > 1000 || height > 1000) {
+					alert('Invalid dimension');
+					return;
+				}
+				createNewBoard(width, height, 'board', 'board');
+			}
+
+			function startSmileBoard() {
+				startNewBoard();
+				if(width < 50 || height < 50) return;
+				[[24,28],[24,26],[26,26],[26,24],[28,24]].map(x=>switchState(...x));
+			}
+
+			function startFillBoard() {
+				startNewBoard();
+				var w = width>>1;
+				var h = height>>1;
+				[
+					[w-2,h-2],
+					[w-2,h],
+					[w-2,h+2],
+					[w,h-2],
+					[w,h],
+					[w,h+2],
+					[w+2,h-2],
+					[w+2,h],
+					[w+2,h+2],
+				].map(x=>switchState(...x));
+			}
+
+			function live() {
+				if(timer == null) return autoNext();
+				clearTimeout(timer);
+				timer = null;
+			}
+			function autoNext() {
+				moveNext();
+				timer = setTimeout('autoNext()',0);
+			}
+		</script>
+	<body>
+		<table>
+			<tr>
+				<td style="width: 60px">Width: </td>
+				<td style="width: 45px">
+					<input style="width: 100%; text-align: right; " type="text" id="width" value="100"/>
+				</td>
+				<td style="width: 60px">&nbsp;</td>
+				<td style="width: 60px">Height: </td>
+				<td style="width: 45px">
+					<input style="width: 100%; text-align: right; " type="text" id="height" value="100"/>
+				</td>
+				<td style="width: 60px">&nbsp;</td>
+				<td style="width: 150px"><a href="#" onclick="startNewBoard()">Create empty board</a></td>
+				<td style="width: 60px">&nbsp;</td>
+				<td style="width: 250px"><a href="#" onclick="startSmileBoard()">Create clown (iterate 13 times)</a></td>
+				<td style="width: 60px">&nbsp;</td>
+				<td style="width: 150px"><a href="#" onclick="startFillBoard()">Create filling board</a></td>
+			</tr>
+		</table>
+		<br/>
+		<hr/>
+		<table>
+			<tr>
+				<td style="width: 150px"><a href="#" onclick="moveNext()">Move next</a></td>
+				<td style="width: 60px">&nbsp;</td>
+				<td style="width: 250px"><a href="#" onclick="live()">Live your own (start/stop)</a></td>
+			</tr>
+		</table>
+		<br/>
+		<hr/>
+		<div id="board">
+
+		</div>
+	</body>
+</html>
