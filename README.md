@@ -13,7 +13,7 @@ Game of life is a zero-player game, where cells on a board can be either populat
 
 Despite these very simple rules, it is a Turing-complete system (and an Universal Turing Machine has been created based on these rules)
 
-[The implementation of the original game is available here](https://dpamar.github.io/covidgameoflife/original.html)
+[The implementation of the original game is available here](https://dpamar.github.io/covidgameoflife/index-original.html)
 
 Check how special patterns like spaceships or canons can be implemented :)
 
